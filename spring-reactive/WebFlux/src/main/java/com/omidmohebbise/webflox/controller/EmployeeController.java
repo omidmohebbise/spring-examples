@@ -24,7 +24,8 @@ public class EmployeeController {
     private Mono<Employee> getEmployeeById(@PathVariable Long id) {
         return employeeService.findById(id);
     }
-    @GetMapping
+
+    @GetMapping()
     private Flux<Employee> getAllEmployees() {
         return employeeService.findAll();
     }
