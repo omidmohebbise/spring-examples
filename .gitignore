@@ -2,8 +2,8 @@
 
 /.gradle/
 /.idea/
-/Internationalization/.gradle/
-/Internationalization/gradle/
+/general/Internationalization/.gradle/
+/general/Internationalization/gradle/
 /liquibase/.gradle/
 /liquibase/.idea/
 /liquibase/build/
@@ -14,15 +14,15 @@
 /liquibasev1/build/
 /liquibasev1/gradle/
 
-/Profiling/.gradle/
-/Profiling/gradle/
-/db-migration/liquibase/.gradle/
-/HALBrowser/gradle/wrapper/
-/Internationalization/build/
-/db-migration/liquibase/build/
-/db-migration/liquibasev1/.gradle/
-/db-migration/liquibasev1/build/
-/db-migration/liquibasev1/gradle/wrapper/
-/Profiling/.gradle/
-/Profiling/gradle/
-/Profiling/.gradle/
+/general/Profiling/.gradle/
+/general/Profiling/gradle/
+/general/db-migration/liquibase/.gradle/
+/spring-hal-browser-example/gradle/wrapper/
+/general/Internationalization/build/
+/general/db-migration/liquibase/build/
+/general/db-migration/liquibasev1/.gradle/
+/general/db-migration/liquibasev1/build/
+/general/db-migration/liquibasev1/gradle/wrapper/
+/general/Profiling/.gradle/
+/general/Profiling/gradle/
+/general/Profiling/.gradle/
