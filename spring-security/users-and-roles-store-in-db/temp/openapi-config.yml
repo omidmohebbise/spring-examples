@@ -1,0 +1,17 @@
+openapi: 3.0.1
+info:
+  title: Your API Title
+  version: 1.0.0
+  description: Your API Description
+  contact:
+    name: Your Name
+    email: your.email@example.com
+paths:
+  /public/data:
+    get:
+      summary: Get public data
+      responses:
+        '200':
+          description: Successful operation
+        '403':
+          description: Forbidden
