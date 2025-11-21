@@ -1,0 +1,48 @@
+networks:
+  monitoring:
+    driver: bridge
+
+volumes:
+  prometheus_data: {}
+
+services:
+  spring-app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    networks:
+      - monitoring
+#    deploy:
+#      resources:
+#        limits:
+#          memory: 1024M
+#          cpus: "0.50"
+  prometheus:
+    image: prom/prometheus
+    container_name: prometheus
+    platform: linux/amd64/v8
+    volumes:
+      - ./infra/prometheus.yml:/etc/prometheus/prometheus.yml
+    ports:
+      - "9090:9090"
+    networks:
+      - monitoring
+  grafana:
+    image: grafana/grafana
+    container_name: grafana
+    ports:
+      - 3000:3000
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=123456  # Set admin password
+#      - GF_INSTALL_PLUGINS=grafana-clock-panel,grafana-simple-json  # Example plugins
+      - GF_DATASOURCES_PATH=./infra/provisioning/datasources
+      - GF_DASHBOARDS_PATH=./infra/provisioning/dashboards
+    volumes:
+      - ./grafana-data:/var/lib/grafana
+      - ./infra/provisioning:/etc/grafana/provisioning
+    env_file:
+      - ./infra/grafana.env
+    networks:
+      - monitoring

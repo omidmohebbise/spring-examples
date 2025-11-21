@@ -1,0 +1,10 @@
+apiVersion: 1
+
+datasources:
+  - name: spring-app-prometheus
+    type: prometheus  # Change this to your data source type
+    access: proxy
+    #url: http://192.168.2.19:9090  # Change to your data source URL
+    url: http://prometheus:9090  # Change to your data source URL
+    jsonData:
+      httpMethod: POST  # Example configuration, adjust as necessary
