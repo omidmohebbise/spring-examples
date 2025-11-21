@@ -23,6 +23,4 @@
 /general/db-migration/liquibasev1/.gradle/
 /general/db-migration/liquibasev1/build/
 /general/db-migration/liquibasev1/gradle/wrapper/
-/general/Profiling/.gradle/
-/general/Profiling/gradle/
-/general/Profiling/.gradle/
+/spring-throughput/grafana-data/
