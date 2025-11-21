@@ -1,0 +1,15 @@
+version: '3.1'
+
+services:
+  mongo:
+    image: mongo:latest
+    container_name: mongodb_spdeveloper
+    restart: always
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: 12345678
+      MONGO_INITDB_DATABASE: test_db
+    ports:
+      - 27017:27017
+    volumes:
+      - ./mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js:ro
