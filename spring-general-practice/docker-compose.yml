@@ -1,0 +1,14 @@
+version: "3.9"
+services:
+  db:
+    image: postgres:15.3
+    container_name: spring-general-db
+    restart: always
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_PASSWORD: 111
+      POSTGRES_USER: user
+      POSTGRES_DB: springGeneralDb
+
+
