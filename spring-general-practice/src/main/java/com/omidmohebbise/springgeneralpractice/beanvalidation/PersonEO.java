@@ -1,5 +1,6 @@
 package com.omidmohebbise.springgeneralpractice.beanvalidation;
 
+import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -9,11 +10,14 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import java.util.List;
 
 @Data
 @NoArgsConstructor
@@ -37,4 +41,9 @@ public class PersonEO {
     @Email
     @NotBlank
     private String email;
+
+    @ElementCollection
+    @ValidHobbies
+    @NotEmpty
+    private List<String> hobbies;
 }
