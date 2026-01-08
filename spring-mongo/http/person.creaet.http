@@ -1,0 +1,17 @@
+### List people
+GET http://localhost:8080/api/people
+Accept: application/json
+
+### Create a person
+POST http://localhost:8080/api/people
+Content-Type: application/json
+
+{
+  "firstName": "Omid",
+  "lastName": "Mohebbi",
+  "age": 30
+}
+
+### Get by id (replace id)
+GET http://localhost:8080/api/people/695f9b5a2825f565c54965e6
+Accept: application/json
