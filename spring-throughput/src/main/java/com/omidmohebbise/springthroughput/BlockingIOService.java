@@ -6,6 +6,8 @@ import org.springframework.stereotype.Service;
 import javax.management.MBeanServer;
 import javax.management.ObjectName;
 import java.lang.management.ManagementFactory;
+import java.util.LinkedHashMap;
+import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
@@ -91,6 +93,34 @@ public class BlockingIOService {
             log.error("Failed to get Tomcat thread info", e);
             return "Error retrieving Tomcat thread info";
         }
+    }
+
+    /**
+     * Returns Tomcat connector thread pool metrics keyed by connector name.
+     *
+     * This reflects the same pool controlled by server.tomcat.threads.max/min-spare.
+     * It does NOT represent total JVM threads.
+     */
+    public Map<String, Map<String, Integer>> getTomcatThreadPoolMetrics() {
+        Map<String, Map<String, Integer>> result = new LinkedHashMap<>();
+        try {
+            MBeanServer mBeanServer = ManagementFactory.getPlatformMBeanServer();
+            Set<ObjectName> objectNames = mBeanServer.queryNames(new ObjectName("Tomcat:type=ThreadPool,*"), null);
+
+            for (ObjectName objectName : objectNames) {
+                String name = objectName.getKeyProperty("name");
+
+                Map<String, Integer> metrics = new LinkedHashMap<>();
+                metrics.put("maxThreads", (Integer) mBeanServer.getAttribute(objectName, "maxThreads"));
+                metrics.put("currentThreadCount", (Integer) mBeanServer.getAttribute(objectName, "currentThreadCount"));
+                metrics.put("currentThreadsBusy", (Integer) mBeanServer.getAttribute(objectName, "currentThreadsBusy"));
+
+                result.put(name, metrics);
+            }
+        } catch (Exception e) {
+            log.error("Failed to read Tomcat thread pool metrics", e);
+        }
+        return result;
     }
 
 }

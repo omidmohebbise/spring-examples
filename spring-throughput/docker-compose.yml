@@ -22,7 +22,7 @@ services:
   prometheus:
     image: prom/prometheus
     container_name: prometheus
-    platform: linux/amd64/v8
+#    platform: linux/amd64/v8
     volumes:
       - ./infra/prometheus.yml:/etc/prometheus/prometheus.yml
     ports:

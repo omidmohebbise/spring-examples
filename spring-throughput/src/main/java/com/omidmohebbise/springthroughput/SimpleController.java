@@ -2,11 +2,10 @@ package com.omidmohebbise.springthroughput;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.Map;
+import java.util.concurrent.Callable;
 
 @Slf4j
 @RestController
@@ -18,6 +17,49 @@ public class SimpleController {
 
     public SimpleController(BlockingIOService blockingIOService) {
         this.blockingIOService = blockingIOService;
+    }
+
+    @GetMapping("/hog")
+    public String hog(@RequestParam(defaultValue = "5000") long ms) throws InterruptedException {
+        // This blocks the request-handling thread on purpose.
+        Thread.sleep(ms);
+        return "Slept " + ms + "ms on thread=" + Thread.currentThread().getName();
+    }
+
+    /**
+     * Async variant to demonstrate/enforce the global timeout configured via:
+     *   spring.mvc.async.request-timeout=5s
+     */
+    @GetMapping("/hog-async")
+    public Callable<String> hogAsync(@RequestParam(defaultValue = "5000") long ms) {
+        return () -> {
+            Thread.sleep(ms);
+            return "Slept " + ms + "ms on thread=" + Thread.currentThread().getName();
+        };
+    }
+
+    /**
+     * Quick runtime check.
+     * When virtual threads are enabled, this should often return isVirtual=true.
+     */
+    @GetMapping("/thread")
+    public ResponseEntity<Map<String, Object>> threadInfo() {
+        Thread t = Thread.currentThread();
+        return ResponseEntity.ok(Map.of(
+                "name", t.getName(),
+                "isVirtual", t.isVirtual(),
+                "isDaemon", t.isDaemon()
+        ));
+    }
+
+    /**
+     * Exact Tomcat connector thread pool counts from JMX.
+     * These numbers correspond to the pool configured via server.tomcat.threads.*
+     * and are different from total JVM live threads.
+     */
+    @GetMapping("/tomcat-threads")
+    public ResponseEntity<Map<String, Map<String, Integer>>> tomcatThreads() {
+        return ResponseEntity.ok(blockingIOService.getTomcatThreadPoolMetrics());
     }
 
     @GetMapping("/use-cpu/{num}")
