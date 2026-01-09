@@ -1,14 +1,23 @@
 plugins {
     id 'java'
-    id 'org.springframework.boot' version '3.2.1'
-    id 'io.spring.dependency-management' version '1.1.4'
+    id 'org.springframework.boot' version '3.5.9'
+    id 'io.spring.dependency-management' version '1.1.7'
 }
 
 group = 'com.example'
 version = '0.0.1-SNAPSHOT'
 
 java {
-    sourceCompatibility = '17'
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(25)
+    }
+}
+
+tasks.withType(JavaCompile).configureEach {
+    // Spring Boot's tooling uses ASM to inspect compiled classes to find the @SpringBootApplication main class.
+    // ASM support for Java 25 class files (major 69) may lag a bit, so we compile to Java 24 bytecode.
+    // You can still run on a Java 25 runtime.
+    options.release = 24
 }
 
 configurations {
@@ -22,10 +31,16 @@ repositories {
 }
 
 dependencies {
+    // Spring Boot + dependency-management plugin will provide managed versions.
+
     implementation 'org.springframework.boot:spring-boot-starter-actuator'
     implementation 'org.springframework.boot:spring-boot-starter-web'
-    compileOnly 'org.projectlombok:lombok'
-    annotationProcessor 'org.projectlombok:lombok'
+
+    // Lombok doesn't currently support Java 25 (fails during annotation processing).
+    // If you need Lombok, pin/upgrade Lombok once it adds JDK 25 support.
+    // compileOnly 'org.projectlombok:lombok:1.18.34'
+    // annotationProcessor 'org.projectlombok:lombok:1.18.34'
+
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }
 
