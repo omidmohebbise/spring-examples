@@ -1,11 +1,9 @@
-package com.example.springboot3;
+package com.omidmohebbise.springboot3;
 
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
-import org.springframework.stereotype.Component;
 import org.springframework.util.StopWatch;
 
-@Component
 public class ExampleOfApplicationRunner implements ApplicationRunner {
     @Override
     public void run(ApplicationArguments args) throws Exception {
@@ -18,7 +16,6 @@ public class ExampleOfApplicationRunner implements ApplicationRunner {
         System.out.println("SourceArgs: " + args.getSourceArgs().length);
         stopWatch.stop();
 
-
-        System.out.println(stopWatch.getTotalTimeSeconds()/100);
+        System.out.println(stopWatch.getTotalTimeSeconds() / 100);
     }
 }
