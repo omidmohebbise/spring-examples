@@ -1,0 +1,77 @@
+version: "3.0"
+services:
+  elasticsearch1:
+    container_name: es-container1
+    image: docker.elastic.co/elasticsearch/elasticsearch:8.1.1
+    environment:
+      - xpack.security.enabled=false
+      - node.name=node1
+      - cluster.name=multi-node-cluster
+      - discovery.seed_hosts=es-container2,es-container3
+      - cluster.initial_master_nodes=node1
+    networks:
+      - es-net
+    ports:
+      - 9201:9200
+    volumes:
+      - ./data1:/usr/share/elasticsearch/data
+    deploy:
+      resources:
+        limits:
+          memory: 2G
+  elasticsearch2:
+    container_name: es-container2
+    image: docker.elastic.co/elasticsearch/elasticsearch:8.1.1
+    environment:
+      - xpack.security.enabled=false
+      - node.name=node2
+      - cluster.name=multi-node-cluster
+      - discovery.seed_hosts=es-container1,es-container3
+    networks:
+      - es-net
+    ports:
+      - 9202:9200
+    volumes:
+      - ./data2:/usr/share/elasticsearch/data
+    deploy:
+      resources:
+        limits:
+          memory: 2G
+  elasticsearch3:
+    container_name: es-container3
+    image: docker.elastic.co/elasticsearch/elasticsearch:8.1.1
+    environment:
+      - xpack.security.enabled=false
+      - node.name=node3
+      - cluster.name=multi-node-cluster
+      - discovery.seed_hosts=es-container1,es-container2
+    networks:
+      - es-net
+    ports:
+      - 9203:9200
+    volumes:
+      - ./data3:/usr/share/elasticsearch/data
+    deploy:
+      resources:
+        limits:
+          memory: 2G
+  kibana:
+    container_name: kb-container
+    image: docker.elastic.co/kibana/kibana:8.1.1
+    environment:
+      ELASTICSEARCH_HOSTS: "[\"http://es-container1:9200\",\"http://es-container2:9200\",\"http://es-container3:9200\"]"
+    networks:
+      - es-net
+    depends_on:
+      - elasticsearch1
+      - elasticsearch2
+      - elasticsearch3
+    ports:
+      - 5601:5601
+    deploy:
+      resources:
+        limits:
+          memory: 1G
+networks:
+  es-net:
+    driver: bridge
